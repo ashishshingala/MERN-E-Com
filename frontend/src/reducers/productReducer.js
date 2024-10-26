@@ -14,9 +14,13 @@ export const addProduct = createAsyncThunk(
       Object.keys(productData).forEach((key) => {
         formData.append(key, productData[key]);
       });
-      const response = await axiosInterceptor.post("/product/add-product", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axiosInterceptor.post(
+        "/product/add-product",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -27,8 +31,22 @@ export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
     const response = await axiosInterceptor.get("/product/get-product");
-    console.log("response", response);
     return response;
+  }
+);
+
+export const fetchSearchResults = createAsyncThunk(
+  "search/fetchSearchResults",
+  async (query, { rejectWithValue }) => {
+    try {
+      const response = await axiosInterceptor.get(
+        `/product/search-products?q=${query}`
+      );
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -59,6 +77,18 @@ const productSlice = createSlice({
         state.products.push(action.payload);
       })
       .addCase(addProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchSearchResults.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSearchResults.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchSearchResults.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

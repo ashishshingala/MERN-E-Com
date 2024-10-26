@@ -8,5 +8,4 @@ router.post("/add-item", Cart.addCartItem);
 router.delete("/remove-item", Cart.deleteCartItem);
 router.get("/:userIds", Cart.fetchCartItem);
 
-
 module.exports = router;

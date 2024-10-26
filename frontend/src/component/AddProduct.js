@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { addProduct } from '../reducers/productReducer';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { addProduct } from "../reducers/productReducer";
 import { useNavigate } from "react-router-dom";
-
+import { showSuccessToast } from "./ToastMessage";
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Product name is required'),
-  description: Yup.string().required('Description is required'),
-  price: Yup.number().required('Price is required').positive('Price must be positive'),
-  category: Yup.string().required('Category is required'),
-  stock: Yup.number().required('Stock quantity is required').min(1, 'Stock must be at least 1'),
-  image: Yup.mixed().required('Image is required')
+  name: Yup.string().required("Product name is required"),
+  description: Yup.string().required("Description is required"),
+  price: Yup.number()
+    .required("Price is required")
+    .positive("Price must be positive"),
+  category: Yup.string().required("Category is required"),
+  stock: Yup.number()
+    .required("Stock quantity is required")
+    .min(1, "Stock must be at least 1"),
+  image: Yup.mixed().required("Image is required"),
 });
 
 const AddProduct = () => {
@@ -23,28 +27,29 @@ const AddProduct = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      description: '',
-      price: '',
-      category: '',
-      stock: '',
-      image: null
+      name: "",
+      description: "",
+      price: "",
+      category: "",
+      stock: "",
+      image: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const productData = { ...values, image };
       dispatch(addProduct(productData)).then((action) => {
         if (action.meta.requestStatus === "fulfilled") {
+          showSuccessToast("Product added successfully");
           navigate("/products");
         }
       });
-    }
+    },
   });
-  
+
   const handleImageChange = (e) => {
     const file = e.currentTarget.files[0];
     setImage(file);
-    formik.setFieldValue('image', file);
+    formik.setFieldValue("image", file);
   };
 
   return (
@@ -144,7 +149,7 @@ const AddProduct = () => {
           className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
           disabled={loading}
         >
-          {loading ? 'Adding...' : 'Add Product'}
+          {loading ? "Adding..." : "Add Product"}
         </button>
 
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}

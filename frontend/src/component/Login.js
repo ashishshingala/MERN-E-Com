@@ -18,7 +18,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.user);
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -27,7 +26,6 @@ const Login = () => {
     validationSchema: loginSchema,
     onSubmit: (values) => {
       dispatch(loginUser(values)).then((action) => {
-        console.log('action', action)
         if (action.meta.requestStatus === "fulfilled") {
           navigate("/products");
         }
@@ -90,7 +88,7 @@ const Login = () => {
           <div>
             <button
               type="button"
-              onClick={()=> navigate('register')}
+              onClick={() => navigate("register")}
               className={`bg-blue-500 text-white p-2 rounded w-full mt-[10px] ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}

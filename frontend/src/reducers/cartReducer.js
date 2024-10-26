@@ -1,41 +1,41 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInterceptor from "../Interceptor";
 
-// Async thunk to fetch cart items
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInterceptor.get(`/cart/${userId}`);
-      return response.data;
+      const response = await axiosInterceptor.get(`/cart/:id`);
+      return response;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
   }
 );
 
-// Async thunk to add item to cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, productId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInterceptor.post("/cart/add-item", { userId, productId });
-      return response.data;
+      const response = await axiosInterceptor.post("/cart/add-item", {
+        userId,
+        productId,
+      });
+      return response;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
   }
 );
 
-// Async thunk to remove item from cart
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, productId }, { rejectWithValue }) => {
     try {
-      const response = await axiosInterceptor.delete("http://localhost:5000/api/cart/remove-item", {
+      const response = await axiosInterceptor.delete("/cart/remove-item", {
         data: { userId, productId },
       });
-      return response.data;
+      return response;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
@@ -59,6 +59,7 @@ const cartSlice = createSlice({
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload.items;
+        state.cartCount = action.payload.items.length;
       })
       .addCase(fetchCartItems.rejected, (state, action) => {
         state.loading = false;
@@ -71,6 +72,7 @@ const cartSlice = createSlice({
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload.items;
+        state.cartCount += 1;
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
