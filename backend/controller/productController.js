@@ -15,7 +15,7 @@ exports.addProduct = async (req, res) => {
       image,
     });
     await product.save();
-    res.status(201).json(product);
+    res.status(201).json({status:201,product:product});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

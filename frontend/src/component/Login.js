@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { loginUser } from "../reducers/userReducer";
-
+import { showSuccessToast, showErrorToast } from "../component/ToastMessage";
 const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
@@ -26,8 +26,11 @@ const Login = () => {
     validationSchema: loginSchema,
     onSubmit: (values) => {
       dispatch(loginUser(values)).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.payload.status === 200) {
+          showSuccessToast("Login successfully!");
           navigate("/products");
+        }else{
+          showErrorToast("Something went wrong!!");
         }
       });
     },
@@ -40,7 +43,7 @@ const Login = () => {
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
         <h2 className="text-2xl font-semibold mb-4">Login</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+       
 
         <div className="mb-4">
           <input

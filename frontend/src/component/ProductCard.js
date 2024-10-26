@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
           <span className="text-xl font-bold text-gray-800">
             ${product.price}
           </span>
-          <span className="text-sm text-gray-600 bg-gray-200 px-2 py-1 rounded-full">
+          <span className="text-sm text-gray-600 bg-green-200 px-2 py-1 rounded-full">
             {product.category}
           </span>
         </div>

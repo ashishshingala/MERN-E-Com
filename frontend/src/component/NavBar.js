@@ -6,6 +6,7 @@ import { fetchCartItems } from "../reducers/cartReducer";
 import { fetchSearchResults } from "../reducers/productReducer";
 import { removeLocalStorage } from "../utils";
 import { debounce } from "lodash";
+import {showSuccessToast} from './ToastMessage';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -34,12 +35,13 @@ const Navbar = () => {
     removeLocalStorage("userId");
     navigate("/");
     window.location.reload();
+    showSuccessToast("Logout successfully!");
   };
 
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        {/* Logo */}
+        
         <Link to="/" className="text-2xl font-bold text-blue-500">
           E-Shop
         </Link>
@@ -54,23 +56,23 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Nav Links */}
+        
         <div className="flex items-center space-x-8">
           <Link
             to="/products"
-            className="text-gray-600 hover:text-blue-500 transition duration-300"
+            className="text-green-600 hover:text-green-500 transition duration-300"
           >
             Products
           </Link>
 
           <Link
             to="/add-products"
-            className="text-gray-600 hover:text-blue-500 transition duration-300"
+            className="text-green-600 hover:text-green-500 transition duration-300"
           >
             Add Product
           </Link>
 
-          {/* Cart Icon with Counter */}
+         
           <Link
             to="/cart"
             className="relative flex items-center text-gray-600 hover:text-blue-500 transition duration-300"
@@ -83,10 +85,10 @@ const Navbar = () => {
             )}
           </Link>
 
-          {/* Logout Button */}
+          
           <button
             onClick={handleLogout}
-            className="py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300"
+            className="py-2 px-4 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-300"
           >
             Logout
           </button>

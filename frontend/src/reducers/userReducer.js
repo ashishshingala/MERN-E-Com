@@ -26,20 +26,25 @@ export const registerUser = createAsyncThunk(
   }
 );
 export const loginUser = createAsyncThunk("user/login", async (userData) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_API_URL}/api/user/login`,
-    userData
-  );
-
-  setLocalStorage("e-comToken", response?.data?.user?.token);
-  const decodeToken = parseJwt(response.data.user.token);
-  setLocalStorage("userId", decodeToken.id);
-
-  return {
-    ...response.data,
-    userId: decodeToken.id,
-    isLoggedIn: !!response?.data?.user?.token,
-  };
+    try{
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/user/login`,
+            userData
+          );
+        
+          setLocalStorage("e-comToken", response?.data?.user?.token);
+          const decodeToken = parseJwt(response.data.user.token);
+          setLocalStorage("userId", decodeToken.id);
+        
+          return {
+            ...response.data,
+            userId: decodeToken.id,
+            isLoggedIn: !!response?.data?.user?.token,
+          };
+    } catch(error){
+        return error;
+    }
+  
 });
 const userSlice = createSlice({
   name: "user",

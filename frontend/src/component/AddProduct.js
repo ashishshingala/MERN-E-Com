@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addProduct } from "../reducers/productReducer";
 import { useNavigate } from "react-router-dom";
-import { showSuccessToast } from "./ToastMessage";
+import { showSuccessToast,showErrorToast } from "./ToastMessage";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Product name is required"),
@@ -22,7 +22,7 @@ const validationSchema = Yup.object({
 const AddProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.product);
+  const { loading } = useSelector((state) => state.product);
   const [image, setImage] = useState(null);
 
   const formik = useFormik({
@@ -38,9 +38,11 @@ const AddProduct = () => {
     onSubmit: (values) => {
       const productData = { ...values, image };
       dispatch(addProduct(productData)).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.payload.status === 201) {
           showSuccessToast("Product added successfully");
           navigate("/products");
+        }else{
+          showErrorToast("Something went wrong!!");
         }
       });
     },
@@ -152,7 +154,7 @@ const AddProduct = () => {
           {loading ? "Adding..." : "Add Product"}
         </button>
 
-        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+        
       </form>
     </div>
   );
